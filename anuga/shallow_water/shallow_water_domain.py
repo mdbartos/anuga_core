@@ -2642,7 +2642,9 @@ class Domain(Generic_Domain):
                outputstep=None,
                finaltime=None,
                duration=None,
-               skip_initial_step=False):
+               skip_initial_step=False,
+               coupling_function=lambda *args: None,
+               coupling_args=tuple()):
         """Evolve method from Domain class.
 
 
@@ -2697,7 +2699,9 @@ class Domain(Generic_Domain):
         # Call basic machinery from parent class
         for t in self._evolve_base(yieldstep=yieldstep,
                                    finaltime=finaltime, duration=duration,
-                                   skip_initial_step=skip_initial_step):
+                                   skip_initial_step=skip_initial_step,
+                                   coupling_function=coupling_function,
+                                   coupling_args=coupling_args):
 
 
             walltime = time.time()
