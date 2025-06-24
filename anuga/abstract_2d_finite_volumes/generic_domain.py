@@ -1677,7 +1677,9 @@ class Generic_Domain(object):
                yieldstep=None,
                finaltime=None,
                duration=None,
-               skip_initial_step=False):
+               skip_initial_step=False, 
+               coupling_function=lambda *args: None,
+               coupling_args=tuple()):
         """Evolve model through time starting from self.starttime.
 
         yieldstep: Interval between yields where results are stored,
@@ -1707,7 +1709,9 @@ class Generic_Domain(object):
 
         for t in self._evolve_base(yieldstep=yieldstep,
                                    finaltime=finaltime, duration=duration,
-                                   skip_initial_step=skip_initial_step):
+                                   skip_initial_step=skip_initial_step, 
+                                   coupling_function=coupling_function,
+                                   coupling_args=coupling_args):
 
             # Pass control on to outer loop for more specific actions
             yield(t)
@@ -1715,7 +1719,9 @@ class Generic_Domain(object):
     def _evolve_base(self, yieldstep=None,
                      finaltime=None,
                      duration=None,
-                     skip_initial_step=False):
+                     skip_initial_step=False, 
+                     coupling_function=lambda *args: None,
+                     coupling_args=tuple()):
         """Evolve model through time starting from self.starttime.
 
         yieldstep: Interval between yields where results are stored,
@@ -1865,6 +1871,7 @@ class Generic_Domain(object):
                 self.number_of_first_order_steps += 1
 
             #print(self.relative_time, self.get_time())
+            coupling_function(*coupling_args)
 
             # Yield results at finaltime
             if self.relative_finaltime is not None and\
